@@ -1,22 +1,22 @@
 require 'rspec'
 require 'hibinium/page_objects/login_page'
+require 'hibinium/page_objects/hibifo_page'
 
-RSpec.describe 'My behaviour' do
+RSpec.describe Hibinium::PageObjects::LoginPage do
 
-  it 'should do something' do
-
+  let(:browser) {
     Selenium::WebDriver::Chrome.driver_path = "lib/chromedriver"
-    # options = Selenium::WebDriver::Chrome::Options.new(args: ['start-maximized', 'user-data-dir=/tmp/temp_profile'])
     driver = Selenium::WebDriver.for :chrome # ブラウザ起動
     driver.get 'https://hibi.i3-systems.com/'
+    driver
+  }
 
-    sleep 5
+  it 'login' do
+    login_page = Hibinium::PageObjects::LoginPage.new(browser)
+    hibifo_page = login_page.login_with("arikawa", "printf192")
 
-    login_page = Hibinium::PageObjects::LoginPage.new(driver)
-    login_page.username = "arikawa"
-    login_page.password = "printf192"
-    login_page.login
-
-    sleep 5
+    puts "日付 :" + hibifo_page.date
+    puts "開始時刻 :" + hibifo_page.start_time
+    puts "終了時刻 :" + hibifo_page.end_time
   end
 end

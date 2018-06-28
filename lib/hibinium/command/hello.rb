@@ -4,8 +4,8 @@ require 'hibinium/command'
 module Hibinium
   class Command < Thor
     desc 'hello', 'say hello!'
-    def hello
-      puts 'Hello!'
+    def hello(name = "")
+      puts "Hello! #{name}"
     end
   end
 end

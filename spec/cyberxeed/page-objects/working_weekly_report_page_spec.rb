@@ -23,5 +23,7 @@ RSpec.describe CyberXeed::PageObjects::WorkingWeeklyReportPage do
     wwr_page.result_table_element.each do |row|
       p row
     end
+
+    p wwr_page.result_table_hash
   end
 end

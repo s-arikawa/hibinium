@@ -17,12 +17,19 @@ module CyberXeed
         end
       end
 
-      # def result_table
-      #   p period_start
-      #   p period_end
-      #   p result_table
-      #   result_table
-      # end
+      # result_tableの内容をArray[hash]で返す。
+      def result_table_hash(headers = %w"日付 曜 出勤時刻 退勤時刻")
+        array = []
+        result_table_element.each do |row|
+          hash = {}
+          headers.each do |header|
+            hash[header] = row[header].text
+          end
+          array << hash
+        end
+        array
+      end
+
     end
   end
 end

@@ -1,5 +1,10 @@
 require "hibinium/version"
+require 'hibinium/command'
 
 module Hibinium
-  # Your code goes here...
+
+  def self.greet
+    'Hello!'
+  end
+
 end

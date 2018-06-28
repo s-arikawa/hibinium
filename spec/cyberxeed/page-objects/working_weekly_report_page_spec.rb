@@ -12,11 +12,14 @@ RSpec.describe CyberXeed::PageObjects::WorkingWeeklyReportPage do
     driver
   }
 
-  it 'table each data' do
+  let(:wwr_page) {
     login_page = CyberXeed::PageObjects::LoginPage.new(browser)
     top_page = login_page.login_with("i3-systems", "192" , "printf192")
-    wwr_page = top_page.page_to_working_weekly_report
+    top_page.page_to_working_weekly_report
+  }
 
+
+  it 'table each data' do
     p wwr_page.period_start
     p wwr_page.period_end
     p wwr_page.result_table

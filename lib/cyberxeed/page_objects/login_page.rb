@@ -7,10 +7,10 @@ module CyberXeed
 
       page_url("https://cxg5.i-abs.co.jp/cyberx/login.asp")
 
-      text_field(:company_code, :name => 'DataSource')
-      text_field(:employee_code, :name => 'LoginID')
-      text_field(:password, :name => 'PassWord')
-      image(:login, :name => 'LOGINBUTTON')
+      text_field(:company_code, name: 'DataSource')
+      text_field(:employee_code, name: 'LoginID')
+      text_field(:password, name: 'PassWord')
+      image(:login, name: 'LOGINBUTTON')
 
       def login
         login_element.click

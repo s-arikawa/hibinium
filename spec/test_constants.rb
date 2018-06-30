@@ -1,4 +1,6 @@
 require 'yaml'
+require 'hibinium/page_objects'
+require 'cyberxeed/page_objects'
 
 module TestConstants
   # テスト用のユーザ設定ファイルです。
@@ -15,14 +17,14 @@ module TestConstants
   def self.chrome_hibifo
     Selenium::WebDriver::Chrome.driver_path = "lib/chromedriver"
     driver = Selenium::WebDriver.for :chrome # ブラウザ起動
-    driver.get 'https://hibi.i3-systems.com/'
+    driver.get Hibinium::PageObjects::Hibifo_URL
     driver
   end
 
   def self.firefox_cyberxeed
     Selenium::WebDriver::Firefox.driver_path = "lib/geckodriver"
     driver = Selenium::WebDriver.for :firefox # ブラウザ起動
-    driver.get 'https://cxg5.i-abs.co.jp/cyberx/login.asp'
+    driver.get CyberXeed::PageObjects::CyberXeed_URL
     driver
   end
 end

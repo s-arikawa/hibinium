@@ -2,7 +2,7 @@ require 'hibinium/page_objects/report_edit_rows'
 
 module Hibinium
   module PageObjects
-    class ReportEditRowElement
+    class ReportEditRow
 
       def initialize(browser, index)
         @browser = browser

@@ -1,4 +1,4 @@
-require 'hibinium/page_objects/report_edit_row_element'
+require 'hibinium/page_objects/report_edit_row'
 
 module Hibinium
   module PageObjects
@@ -12,7 +12,7 @@ module Hibinium
 
       def each
         get_elements(@browser).each_with_index do |row, i|
-          yield ReportEditRowElement.new(@browser, i)
+          yield ReportEditRow.new(@browser, i)
         end
       end
 
@@ -22,6 +22,7 @@ module Hibinium
       end
 
       # 行を追加
+      # 2行追加される。
       def add_row
         HibifoPage.new(@browser).add_detail
       end

@@ -20,8 +20,8 @@ module Hibinium
       # 作業時間
       div(:workTimeBox, id: 'workTimeBox')
 
-      # add_detail
-      button(:add_detail, value: '+追加')
+      # add_detail 2行追加される
+      link(:add_detail, text: '+追加')
 
 
       # 今日の振り返り(所感 / 思うところ)
@@ -35,9 +35,12 @@ module Hibinium
 
 
       # 一時保存
-      button(:temporary_save, value: '一時保存')
+      button(:temporary_save_btn, value: '一時保存')
       # 保存
-      button(:save, value: ' 保 存 ')
+      button(:save_btn, value: ' 保 存 ')
+
+      # 削除
+      link(:delete_link, text: '削除')
 
       def initialize(root)
         super(root)
@@ -55,8 +58,16 @@ module Hibinium
 
       # 一時保存する。
       def temporary_save
-        temporary_save
+        temporary_save_btn
         sleep 5 #TODO:保存されるのを検知してスピードアップ
+      end
+      # 削除する
+      def delete
+        delete_link
+        sleep 0.5
+        confirm = @browser.switch_to.alert
+        confirm.accept
+        sleep 5 #TODO:削除完了したのを検知してスピードアップ
       end
 
       # 詳細入力レコードを取得。

@@ -13,7 +13,7 @@ module Hibinium
         ReportEditRows.elements(@browser)[@row_index].find_element(class: "detailCodeInput")
       end
       def job_code
-        self.job_code_element.text
+        self.job_code_element[:value]
       end
       def job_code=(value)
         self.job_time_element.clear
@@ -24,7 +24,7 @@ module Hibinium
         ReportEditRows.elements(@browser)[@row_index].find_element(class: "detailTextInput")
       end
       def job_text
-        self.job_text_element.text
+        self.job_text_element[:value]
       end
       def job_text=(value)
         self.job_time_element.clear
@@ -35,7 +35,7 @@ module Hibinium
         ReportEditRows.elements(@browser)[@row_index].find_element(class: "detailTimeInput")
       end
       def job_time
-        self.job_time_element.text
+        self.job_time_element[:value]
       end
       def job_time=(value)
         self.job_time_element.clear

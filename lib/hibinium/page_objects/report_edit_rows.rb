@@ -16,6 +16,16 @@ module Hibinium
         end
       end
 
+      # 現在の行数を返す
+      def size
+        get_elements(@browser).size
+      end
+
+      # 行を追加
+      def add_row
+        HibifoPage.new(@browser).add_detail
+      end
+
       def self.elements(browser)
         new(browser).elements
       end

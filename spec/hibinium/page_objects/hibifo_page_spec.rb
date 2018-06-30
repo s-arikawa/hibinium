@@ -32,6 +32,8 @@ RSpec.describe Hibinium::PageObjects::HibifoPage do
     puts "日付 :" + hibifo_page.date
     puts "開始時刻 :" + hibifo_page.start_time
     puts "終了時刻 :" + hibifo_page.end_time
+
+    hibifo_page.delete
   end
 
   it 'should editing report-edit-rows' do
@@ -40,8 +42,21 @@ RSpec.describe Hibinium::PageObjects::HibifoPage do
       row.job_text = "moge"
       row.job_time = "01:00"
     end
-
   end
 
+  it 'add new row' do
+    hibifo_page.add_detail
+    hibifo_page.add_detail
+
+    hibifo_page.report_edit_rows.each do |row|
+      row.job_code = "hoge"
+      row.job_text = "moge"
+      row.job_time = "01:00"
+    end
+
+    hibifo_page.report_edit_rows.each do |row|
+      puts "code: #{row.job_code} : #{row.job_text} _ #{row.job_time}"
+    end
+  end
 
 end

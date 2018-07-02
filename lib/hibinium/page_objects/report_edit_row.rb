@@ -42,6 +42,11 @@ module Hibinium
         self.job_time_element.send_keys(value)
       end
 
+      # 入力済み？
+      def entered?
+        not (self.job_code.empty? || self.job_text.empty? || self.job_time.empty?)
+      end
+
     end
   end
 end

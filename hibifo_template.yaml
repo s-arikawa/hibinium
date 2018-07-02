@@ -1,0 +1,16 @@
+:sunday:
+:monday:
+  - :code: "[PD0224][会議/外部対応]自社 PANEL_CSE<10>"
+    :text: "朝会"
+    :time: "00:15"
+  - :code: "[PD0224][実装/開発]自社 PANEL_CSE<30>"
+    :text: "CLOMO-XXXX 実装"
+    :time: "01:00"
+  - :code: "[OM8001][その他]自社 製品開発部_共通<99>"
+    :text: "日々報入力作業"
+    :time: "00:03"
+:tuesday:
+:wednesday:
+:thursday:
+:friday:
+:saturday:

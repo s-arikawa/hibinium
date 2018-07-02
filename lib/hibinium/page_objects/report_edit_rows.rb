@@ -16,6 +16,10 @@ module Hibinium
         end
       end
 
+      def [](index)
+        ReportEditRow.new(@browser, index)
+      end
+
       # 現在の行数を返す
       def size
         get_elements(@browser).size

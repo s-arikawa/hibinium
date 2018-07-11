@@ -36,10 +36,10 @@ module Hibinium
       puts "got hibifo url"
       hibifo_page = login_page.login_with(user_config[:user_name], user_config[:password])
       puts "hibifo login success!"
-      puts "move to hibifo page"
 
       # 指定の日に移動(指定なしの場合は不要)
       hibifo_page.page_to_specified_date(specified_date.strftime("%Y-%m-%d")) unless date.empty?
+      puts "move to hibifo page"
 
       # 入力済みでないか確認
       #   入力済みだったら終わる
@@ -68,7 +68,9 @@ module Hibinium
 
     def chrome_hibifo
       Selenium::WebDriver::Chrome.driver_path = "lib/chromedriver"
-      driver = Selenium::WebDriver.for :chrome # ブラウザ起動
+      options = Selenium::WebDriver::Chrome::Options.new
+      options.add_argument('--headless')
+      driver = Selenium::WebDriver.for :chrome, options: options # ブラウザ起動
       driver.get Hibinium::PageObjects::Hibifo_URL
       driver
     end

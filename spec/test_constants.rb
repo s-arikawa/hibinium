@@ -1,4 +1,5 @@
 require 'yaml'
+require 'hibinium'
 require 'hibinium/page_objects'
 require 'cyberxeed/page_objects'
 
@@ -17,14 +18,14 @@ module TestConstants
   def self.chrome_hibifo
     Selenium::WebDriver::Chrome.driver_path = "lib/chromedriver"
     driver = Selenium::WebDriver.for :chrome # ブラウザ起動
-    driver.get Hibinium::PageObjects::Hibifo_URL
+    driver.get Hibifo_URL
     driver
   end
 
   def self.firefox_cyberxeed
     Selenium::WebDriver::Firefox.driver_path = "lib/geckodriver"
     driver = Selenium::WebDriver.for :firefox # ブラウザ起動
-    driver.get CyberXeed::PageObjects::CyberXeed_URL
+    driver.get CyberXeed_URL
     driver
   end
 end

@@ -71,7 +71,7 @@ module Hibinium
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_argument('--headless')
       driver = Selenium::WebDriver.for :chrome, options: options # ブラウザ起動
-      driver.get Hibinium::PageObjects::Hibifo_URL
+      driver.get Hibifo_URL
       driver
     end
 

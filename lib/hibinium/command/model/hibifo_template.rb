@@ -38,7 +38,7 @@ module Hibinium
     end
   end
 
-# 日々報の詳細行
+  # 日々報の詳細行
   class ReportDetailRow
     attr_accessor :code, :text, :time
 

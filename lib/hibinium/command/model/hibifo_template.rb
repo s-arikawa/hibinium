@@ -1,3 +1,5 @@
+require 'hibinium'
+
 module Hibinium
 # 日々報に入力する内容を持つモデル
 # 実態は設定ファイル
@@ -36,16 +38,29 @@ module Hibinium
       end
       hash
     end
+
+    # ローカル設定ファイルを読み込む
+    def load
+      yaml = YAML.load_file(TemplateFilePath)
+      self.sunday = yaml["sunday"].each {|r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"])} unless yaml["sunday"].nil?
+      self.monday = yaml["monday"].each {|r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"])} unless yaml["monday"].nil?
+      self.tuesday = yaml["tuesday"].each {|r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"])} unless yaml["tuesday"].nil?
+      self.wednesday = yaml["wednesday"].each {|r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"])} unless yaml["wednesday"].nil?
+      self.thursday = yaml["thursday"].each {|r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"])} unless yaml["thursday"].nil?
+      self.friday = yaml["friday"].each {|r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"])} unless yaml["friday"].nil?
+      self.saturday = yaml["saturday"].each {|r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"])} unless yaml["saturday"].nil?
+      self
+    end
   end
 
   # 日々報の詳細行
   class ReportDetailRow
     attr_accessor :code, :text, :time
 
-    def initialize
-      self.code = ""
-      self.text = ""
-      self.time = "00:00"
+    def initialize(code: "", text: "", time: "00:00")
+      self.code = code
+      self.text = text
+      self.time = time
     end
 
     def to_hash

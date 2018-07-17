@@ -1,5 +1,7 @@
 require 'hibinium'
 require 'hibinium/command'
+require 'hibinium/command/model/hibifo_template'
+require 'hibinium/command/model/hibifo_config'
 require 'hibinium/page_objects'
 require 'hibinium/page_objects/login_page'
 require 'hibinium/page_objects/hibifo_page'
@@ -21,12 +23,11 @@ module Hibinium
       puts "specified date : #{specified_date} #{specified_date.wday} #{day_of_the_week[specified_date.wday]}"
 
       # 曜日テンプレートをload
-      template = YAML.load_file('hibifo_template.yaml')[day_of_the_week[specified_date.wday]]
+      template = HibifoTemplate.new.load.to_hash[day_of_the_week[specified_date.wday].to_s]
       puts "template config file loaded!"
-      p template
 
       # user/pass設定ファイルをload
-      user_config = YAML.load_file('hibinium.local.yaml')[:hibifo]
+      user_config = HibifoConfig.new.load.to_hash["hibifo"]
       puts "user config file loaded!"
 
       # 日々報にログイン
@@ -53,10 +54,10 @@ module Hibinium
       # テンプレートを入力
       template.each_with_index do |job, i|
         row = hibifo_page.report_edit_rows[i]
-        row.job_code = job[:code]
-        row.job_text = job[:text]
-        row.job_time = job[:time]
-        puts "input row[#{i}] : #{job[:code]} | #{job[:text]} | #{job[:time]}"
+        row.job_code = job["code"]
+        row.job_text = job["text"]
+        row.job_time = job["time"]
+        puts "input row[#{i}] : #{job["code"]} | #{job["text"]} | #{job["time"]}"
       end
 
       # 一時保存

@@ -18,16 +18,16 @@ module Hibinium
       puts "Hibifo set Template Start!! #{date}"
 
       # 設定する日の曜日を取得
-      day_of_the_week = %i[sunday monday tuesday wednesday thursday friday saturday]
+      day_of_the_week = %w[sunday monday tuesday wednesday thursday friday saturday]
       specified_date = date.empty? ? Date.today : Date.new(date)
       puts "specified date : #{specified_date} #{specified_date.wday} #{day_of_the_week[specified_date.wday]}"
 
       # 曜日テンプレートをload
-      template = HibifoTemplate.new.load.to_hash[day_of_the_week[specified_date.wday].to_s]
+      template = HibifoTemplate.new.load.to_hash[day_of_the_week[specified_date.wday]]
       puts "template config file loaded!"
 
       # user/pass設定ファイルをload
-      user_config = HibifoConfig.new.load.to_hash["hibifo"]
+      user_config = HibifoConfig.new.load.hibifo
       puts "user config file loaded!"
 
       # 日々報にログイン
@@ -35,7 +35,7 @@ module Hibinium
       puts "open chrome browser"
       login_page = Hibinium::PageObjects::LoginPage.new(browser)
       puts "got hibifo url"
-      hibifo_page = login_page.login_with(user_config[:user_name], user_config[:password])
+      hibifo_page = login_page.login_with(user_config.user_name, user_config.password)
       puts "hibifo login success!"
 
       # 指定の日に移動(指定なしの場合は不要)
@@ -68,7 +68,6 @@ module Hibinium
     private
 
     def chrome_hibifo
-      Selenium::WebDriver::Chrome.driver_path = "lib/chromedriver"
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_argument('--headless')
       driver = Selenium::WebDriver.for :chrome, options: options # ブラウザ起動

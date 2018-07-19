@@ -26,9 +26,20 @@ module Hibinium
     # ローカル設定ファイルを読み込む
     def load
       yaml = YAML.load_file(ConfigFilePath)
-      self.hibifo = yaml["hibifo"]
-      self.cyberxeed = yaml["cyberxeed"]
+      hibifo_conf = yaml["hibifo"]
+      self.hibifo = UserConfig.new(hibifo_conf[:user_name], hibifo_conf[:password])
+      cyber_conf = yaml["cyberxeed"]
+      self.cyberxeed = UserConfig.new(cyber_conf[:user_name], cyber_conf[:password], cyber_conf[:company_code])
       self
+    end
+  end
+
+  class UserConfig
+    attr_accessor :user_name, :password, :company_code
+    def initialize(user_name = "your_name", password = "*****", company_code = "i3-systems")
+      self.user_name = user_name
+      self.password = password
+      self.company_code = company_code
     end
   end
 end

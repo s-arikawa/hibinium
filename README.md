@@ -15,6 +15,8 @@ gem 'hibinium'
 And then execute:
 
     $ bundle
+    $ brew cask install chromedriver
+    $ brew install geckodriver
 
 Or install it yourself as:
 
@@ -22,7 +24,13 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    $ hibi
+    Commands:
+      hibi hello           # say hello!
+      hibi help [COMMAND]  # Describe available commands or one specific command
+      hibi init            # hibinium configuration file make up!
+      hibi set             # hibifo set Template by day of the week and temporary save.
+
 
 ## Development
 

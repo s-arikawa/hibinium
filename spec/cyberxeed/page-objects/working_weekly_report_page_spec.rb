@@ -1,4 +1,5 @@
 require 'rspec'
+require 'hibinium'
 require 'cyberxeed/page_objects/login_page'
 require 'cyberxeed/page_objects/top_page'
 require 'cyberxeed/page_objects/working_weekly_report_page'

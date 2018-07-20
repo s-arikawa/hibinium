@@ -7,6 +7,9 @@ require 'hibinium/page_objects/login_page'
 require 'hibinium/page_objects/hibifo_page'
 require 'hibinium/page_objects/report_edit_rows'
 require 'hibinium/page_objects/report_edit_row'
+require 'cyberxeed/page_objects/login_page'
+require 'cyberxeed/page_objects/top_page'
+require 'cyberxeed/page_objects/working_weekly_report_page'
 require 'yaml'
 require 'date'
 
@@ -51,6 +54,12 @@ module Hibinium
         end
       end
 
+      # 出社打刻時間をCyberxeedから取得
+      checkin_time = get_checkin_time(specified_date)
+      # 出社打刻に打刻時刻をセット
+      hibifo_page.start_time = checkin_time
+      puts "勤務時間の開始時刻に#{checkin_time}を設定"
+
       # テンプレートを入力
       template.each_with_index do |job, i|
         row = hibifo_page.report_edit_rows[i]
@@ -73,6 +82,44 @@ module Hibinium
       driver = Selenium::WebDriver.for :chrome, options: options # ブラウザ起動
       driver.get Hibifo_URL
       driver
+    end
+
+    def firefox_cyberxeed
+      options = Selenium::WebDriver::Firefox::Options.new
+      options.add_argument('--headless')
+      driver = Selenium::WebDriver.for :firefox, options: options # ブラウザ起動
+      driver.get CyberXeed_URL
+      driver
+    end
+
+    def get_checkin_time(specified_date)
+      user_config = HibifoConfig.new.load.cyberxeed
+      browser = firefox_cyberxeed
+      puts "oprn firefox browser"
+      login_page = CyberXeed::PageObjects::LoginPage.new(browser)
+      puts "got cyberxeed url"
+      top_page = login_page.login_with(user_config.company_code, user_config.user_name, user_config.password)
+      puts "cyberxeed login success!"
+      wwr_page = top_page.page_to_working_weekly_report
+      puts "move to working_weekly_report page"
+
+      # 指定の日を検索する
+      wwr_page.period_end = specified_date.to_s.gsub('-', '')
+      wwr_page.search
+      sleep 5
+      result_table = wwr_page.result_table_hash
+
+      puts result_table
+
+      date = specified_date.strftime("%m/%d")
+      target_row = result_table.find do |row|
+        row['日付'] == date
+      end
+
+      p target_row
+
+      return target_row['出勤時刻']
+
     end
 
   end

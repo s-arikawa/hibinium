@@ -13,10 +13,10 @@ module Hibinium
       end_date   = specified_month
 
       # 日々報の指定の月のデータを取得
-      p hibifo_monthly_report = get_hibifo_monthly_report(start_date, end_date)
+      hibifo_monthly_report = get_hibifo_monthly_report(start_date, end_date)
 
       # Cyberxeedの指定の月のデータを取得
-      p cyberxeed_monthly_report = get_cyberxeed_monthly_report(start_date, end_date)
+      cyberxeed_monthly_report = get_cyberxeed_monthly_report(start_date, end_date)
 
       # 比較
       total_judge = true

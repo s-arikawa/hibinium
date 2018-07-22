@@ -103,7 +103,7 @@ module Hibinium
         row['日付'] == date
       end
 
-      return p target_row
+      return target_row
     end
 
   end

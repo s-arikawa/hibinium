@@ -7,7 +7,7 @@ module Hibinium
 
     def diff(year = "", month = "")
       # 指定された月の月末日を取得 (指定がない場合、当日を取得)
-      specified_month = month.empty? ? Date.today : Date.new(year, month, -1)
+      specified_month = month.to_s.empty? ? Date.today : Date.new(year.to_i, month.to_i, -1)
 
       start_date = Date.new(specified_month.year, specified_month.month, 1)
       end_date   = specified_month

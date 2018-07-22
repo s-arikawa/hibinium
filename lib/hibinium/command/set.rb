@@ -37,12 +37,8 @@ module Hibinium
       puts "user config file loaded!"
 
       # 日々報にログイン
-      browser = chrome_hibifo
-      puts "open chrome browser"
-      login_page = Hibinium::PageObjects::LoginPage.new(browser)
-      puts "got hibifo url"
-      hibifo_page = login_page.login_with(user_config.user_name, user_config.password)
-      puts "hibifo login success!"
+      browser     = chrome_hibifo
+      hibifo_page = Hibinium::Scenario.login_with(browser)
 
       # 指定の日に移動(指定なしの場合は不要)
       hibifo_page.page_to_specified_date(specified_date.strftime("%Y-%m-%d")) unless date.empty?

@@ -14,5 +14,16 @@ module Hibinium
       puts "move to working_weekly_report page"
       wwr_page
     end
+
+    # 日々報にログインする
+    def self.login_with(browser)
+      user_config = HibifoConfig.new.load.hibifo
+      puts "open chrome browser"
+      login_page = Hibinium::PageObjects::LoginPage.new(browser)
+      puts "got hibifo url"
+      hibifo_page = login_page.login_with(user_config.user_name, user_config.password)
+      puts "hibifo login success!"
+      hibifo_page
+    end
   end
 end

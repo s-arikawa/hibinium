@@ -1,4 +1,5 @@
 require 'page-object'
+require 'hibinium/my_logger'
 
 module CyberXeed
   module PageObjects

@@ -15,13 +15,10 @@ module CyberXeed
       end
 
       def page_to_working_weekly_report
-        puts "TOP Page Start"
         sleep 1
         closing_time_process_menu_element.click
-        puts "終業日時処理 を クリック"
         sleep 1
         working_weekly_report_menu
-        puts "終業週報 を クリック"
         sleep 3
         WorkingWeeklyReportPage.new(browser)
       end

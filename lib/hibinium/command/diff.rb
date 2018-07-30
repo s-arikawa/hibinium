@@ -1,5 +1,6 @@
 require 'hibinium'
 require 'hibinium/command'
+require 'hibinium/my_logger'
 
 module Hibinium
   class Command < Thor
@@ -29,10 +30,10 @@ module Hibinium
           row['日付'] == date
         end
 
-        h_start = hibifo_report['出勤時刻']
-        h_end   = hibifo_report['退勤時刻']
-        c_start = cyberxeed_report['出勤時刻'].gsub(' ', '0')
-        c_end   = cyberxeed_report['退勤時刻'].gsub(' ', '0')
+        h_start  = hibifo_report['出勤時刻']
+        h_end    = hibifo_report['退勤時刻']
+        c_start  = cyberxeed_report['出勤時刻'].gsub(' ', '0')
+        c_end    = cyberxeed_report['退勤時刻'].gsub(' ', '0')
         off_days = %w[法外 法定]
         if h_start == c_start && h_end == c_end
           judge = "OK"
@@ -41,17 +42,17 @@ module Hibinium
           if off_days.include?(calend) && c_start == '00000' && c_end == '00000'
             judge = "休"
           else
-            judge = "NG"
+            judge       = "NG"
             total_judge = false
           end
         end
-        puts "#{date} | #{judge} | #{h_start} - #{h_end} | #{c_start} - #{c_end}"
+        log.info("#{date} | #{judge} | #{h_start} - #{h_end} | #{c_start} - #{c_end}")
       end
 
       if total_judge
-        puts "差異はありませんでした。"
+        log.info("差異はありませんでした。")
       else
-        puts "差異があります！"
+        log.info("差異があります！")
       end
 
     end
@@ -64,10 +65,10 @@ module Hibinium
       hibifo_page = Hibinium::Scenario.login_with(browser)
 
       day_of_the_week = %w[日 月 火 水 木 金 土]
-      puts "for #{start_date.to_s} ~ #{end_date.to_s}"
+      log.info("for #{start_date.to_s} ~ #{end_date.to_s}")
       array = []
       (start_date..end_date).each do |day|
-        puts "get hibi.i3-systems.com/report/#{day.strftime("%Y-%m-%d")}"
+        log.info("get hibi.i3-systems.com/report/#{day.strftime("%Y-%m-%d")}")
         hibifo_page.page_to_specified_date(day.strftime("%Y-%m-%d"))
         hash         = {}
         hash['日付']   = day.strftime("%m/%d")
@@ -88,7 +89,7 @@ module Hibinium
       end_date              = end_date.to_s.gsub('-', '')
       wwr_page.period_start = start_date
       wwr_page.period_end   = end_date
-      puts "#{start_date} ~ #{end_date}の期間で検索"
+      log.info("#{start_date} ~ #{end_date}の期間で検索")
       wwr_page.search
       sleep 5 # TODO 高速化
       wwr_page.result_table_hash

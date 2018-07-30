@@ -1,4 +1,5 @@
 require 'hibinium'
+require 'hibinium/my_logger'
 require 'hibinium/command'
 require 'hibinium/command/model/hibifo_template'
 require 'hibinium/command/model/hibifo_config'
@@ -11,19 +12,19 @@ module Hibinium
 
     def init
       make_template = true
-      make_config = true
+      make_config   = true
 
       make_template = HighLine.agree("The file 'hibinium.template.yml' already exists. Do you want to overwrite? [Y/n]") if File.exist?(TemplateFilePath)
-      make_config = HighLine.agree("The file 'hibinium.local.yml' already exists. Do you want to overwrite? [Y/n]") if File.exist?(ConfigFilePath)
+      make_config   = HighLine.agree("The file 'hibinium.local.yml' already exists. Do you want to overwrite? [Y/n]") if File.exist?(ConfigFilePath)
       Dir.mkdir(ConfigFileDirPath) unless Dir.exists?(ConfigFileDirPath)
 
       if make_template
         File.write(TemplateFilePath, generate_template_yaml)
-        puts "make file #{TemplateFilePath}"
+        log.info("make file #{TemplateFilePath}")
       end
       if make_config
         File.write(ConfigFilePath, generate_config_yaml)
-        puts "make file #{ConfigFilePath}"
+        log.info("make file #{ConfigFilePath}")
       end
     end
 

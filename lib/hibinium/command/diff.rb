@@ -61,38 +61,46 @@ module Hibinium
 
     def get_hibifo_monthly_report(start_date, end_date)
       # 日々報にログイン
-      browser     = chrome_hibifo
-      hibifo_page = Hibinium::Scenario.login_with(browser)
+      browser = chrome_hibifo
+      begin
+        hibifo_page = Hibinium::Scenario.login_with(browser)
 
-      day_of_the_week = %w[日 月 火 水 木 金 土]
-      log.info("for #{start_date.to_s} ~ #{end_date.to_s}")
-      array = []
-      (start_date..end_date).each do |day|
-        log.info("get hibi.i3-systems.com/report/#{day.strftime("%Y-%m-%d")}")
-        hibifo_page.page_to_specified_date(day.strftime("%Y-%m-%d"))
-        hash         = {}
-        hash['日付']   = day.strftime("%m/%d")
-        hash['曜']    = day_of_the_week[day.wday]
-        hash['出勤時刻'] = hibifo_page.start_time
-        hash['退勤時刻'] = hibifo_page.end_time
-        array << hash
+        day_of_the_week = %w[日 月 火 水 木 金 土]
+        log.info("for #{start_date.to_s} ~ #{end_date.to_s}")
+        array = []
+        (start_date..end_date).each do |day|
+          log.info("get hibi.i3-systems.com/report/#{day.strftime("%Y-%m-%d")}")
+          hibifo_page.page_to_specified_date(day.strftime("%Y-%m-%d"))
+          hash         = {}
+          hash['日付']   = day.strftime("%m/%d")
+          hash['曜']    = day_of_the_week[day.wday]
+          hash['出勤時刻'] = hibifo_page.start_time
+          hash['退勤時刻'] = hibifo_page.end_time
+          array << hash
+        end
+        array
+      rescue
+        browser.close
       end
-      array
     end
 
     def get_cyberxeed_monthly_report(start_date, end_date)
-      browser  = firefox_cyberxeed
-      wwr_page = Hibinium::Scenario.login_and_move_to_wwr(browser)
+      browser = firefox_cyberxeed
+      begin
+        wwr_page = Hibinium::Scenario.login_and_move_to_wwr(browser)
 
-      # 指定の日を検索する
-      start_date            = start_date.to_s.gsub('-', '')
-      end_date              = end_date.to_s.gsub('-', '')
-      wwr_page.period_start = start_date
-      wwr_page.period_end   = end_date
-      log.info("#{start_date} ~ #{end_date}の期間で検索")
-      wwr_page.search
-      sleep 5 # TODO 高速化
-      wwr_page.result_table_hash
+        # 指定の日を検索する
+        start_date            = start_date.to_s.gsub('-', '')
+        end_date              = end_date.to_s.gsub('-', '')
+        wwr_page.period_start = start_date
+        wwr_page.period_end   = end_date
+        log.info("#{start_date} ~ #{end_date}の期間で検索")
+        wwr_page.search
+        sleep 5 # TODO 高速化
+        wwr_page.result_table_hash
+      rescue
+        browser.close
+      end
     end
   end
 end

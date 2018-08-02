@@ -17,5 +17,13 @@ module Hibinium
       driver.get CyberXeed_URL
       driver
     end
+
+    def self.firefox_cyberxeed
+      options = Selenium::WebDriver::Firefox::Options.new
+      options.add_argument('--headless')
+      driver = Selenium::WebDriver.for :firefox, options: options # ブラウザ起動
+      driver.get CyberXeed_URL
+      driver
+    end
   end
 end

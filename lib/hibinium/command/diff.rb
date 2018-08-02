@@ -1,23 +1,18 @@
 require 'hibinium'
 require 'hibinium/command'
 require 'hibinium/my_logger'
+require 'hibinium/scenario'
 
 module Hibinium
   class Command < Thor
     desc 'diff', 'compare your enter daily report and cx'
 
     def diff(year = "", month = "")
-      # 指定された月の月末日を取得 (指定がない場合、当日を取得)
-      specified_month = month.to_s.empty? ? Date.today : Date.new(year.to_i, month.to_i, -1)
-
-      start_date = Date.new(specified_month.year, specified_month.month, 1)
-      end_date   = specified_month
-
       # 日々報の指定の月のデータを取得
       hibifo_monthly_report = get_hibifo_monthly_report(start_date, end_date)
 
       # Cyberxeedの指定の月のデータを取得
-      cyberxeed_monthly_report = get_cyberxeed_monthly_report(start_date, end_date)
+      cyberxeed_monthly_report = Hibinium::Scenario.get_monthly_work_record_table(year, month)
 
       # 比較
       total_judge = true
@@ -84,23 +79,5 @@ module Hibinium
       end
     end
 
-    def get_cyberxeed_monthly_report(start_date, end_date)
-      browser = firefox_cyberxeed
-      begin
-        wwr_page = Hibinium::Scenario.login_and_move_to_wwr(browser)
-
-        # 指定の日を検索する
-        start_date            = start_date.to_s.gsub('-', '')
-        end_date              = end_date.to_s.gsub('-', '')
-        wwr_page.period_start = start_date
-        wwr_page.period_end   = end_date
-        log.info("#{start_date} ~ #{end_date}の期間で検索")
-        wwr_page.search
-        sleep 5 # TODO 高速化
-        wwr_page.result_table_hash
-      rescue
-        browser.close
-      end
-    end
   end
 end

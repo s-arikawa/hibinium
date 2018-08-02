@@ -89,17 +89,10 @@ module Hibinium
     def get_checkin_out_row(specified_date)
       browser = firefox_cyberxeed
       begin
-        wwr_page = Hibinium::Scenario.login_and_move_to_wwr(browser)
-
         # 指定の日を検索する
-        start_date            = Date.new(specified_date.year, specified_date.month, 1).to_s.gsub('-', '')
-        end_date              = specified_date.to_s.gsub('-', '')
-        wwr_page.period_start = start_date
-        wwr_page.period_end   = end_date
-        log.info("#{start_date} ~ #{end_date}の期間で検索")
-        wwr_page.search
-        sleep 5 # TODO 高速化
-        result_table = wwr_page.result_table_hash
+        start_date   = Date.new(specified_date.year, specified_date.month, 1).to_s.gsub('-', '')
+        end_date     = specified_date.to_s.gsub('-', '')
+        result_table = Hibinium::Scenario.get_work_record_table(start_date, end_date)
 
         date       = specified_date.strftime("%m/%d")
         target_row = result_table.find do |row|

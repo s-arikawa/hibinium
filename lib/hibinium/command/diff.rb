@@ -9,6 +9,9 @@ module Hibinium
 
     def diff(year = "", month = "")
       # 日々報の指定の月のデータを取得
+      specified_month = month.to_s.empty? ? Date.today : Date.new(year.to_i, month.to_i, -1)
+      start_date = Date.new(specified_month.year, specified_month.month, 1)
+      end_date   = specified_month
       hibifo_monthly_report = get_hibifo_monthly_report(start_date, end_date)
 
       # Cyberxeedの指定の月のデータを取得

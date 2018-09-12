@@ -22,30 +22,29 @@ module Hibinium
         hour, min = work_time.split(':').map { |i| i.to_i }
         hour * 60 + min
       end
-      p actual_working_minutes
       # 今月の残り労働予定時間（総労働時間 - 実労働時間）
       # 今月は残り何分働かないといけないか。
       remaining_working_minutes = monthly_working_hours * 60 - actual_working_minutes
       # 今月の残り労働予定日数(余りは時間)に換算（残り労働予定時間 % 8h）
-      p remaining_working_minutes
-      
+
+      today = Date.today
       # 今月の残り所定日数
       # 今月はあと何日勤務日数があるか
-      today                  = Date.today
       remaining_working_days = monthly_report.select { |row|
         month, day = row['日付'].split('/')
         date       = Date.new(today.year, month.to_i, day.to_i)
         today <= date # 今日を含んで未来の日
       }.count { |row| !off_days.include?(row['ｶﾚﾝﾀﾞ']) }
 
-      puts "今月は#{monthly_working_days}日の所定日数があります。"
-      puts "今月は#{actual_working_minutes / 60 / 8}日分働きました。"
+      puts "今月は#{monthly_working_days}日(#{monthly_working_hours}h)の所定日数があります。"
+      puts "今月は#{actual_working_minutes / 60 / 8}日(#{actual_working_minutes / 60}h)分働きました。"
       puts "今月の残り所定日数は、今日(#{today.to_s})から数えて#{remaining_working_days}日あるので、"
       if remaining_working_minutes / 60 < remaining_working_days * 8
-        puts "休んでいいです(*^_^*)"
+        puts "休んでいいです(*^_^*) #{remaining_working_days * 8 - remaining_working_minutes / 60}h 残業しています。"
       else
-        puts "残業が必要です(´；ω；｀)"
+        puts "残業が必要です(´；ω；｀) #{remaining_working_days * 8 - remaining_working_minutes / 60}h 残業が必要です。"
       end
+
 
     end
 

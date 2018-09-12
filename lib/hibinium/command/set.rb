@@ -27,7 +27,7 @@ module Hibinium
 
       # 設定する日の曜日を取得
       day_of_the_week = %w[sunday monday tuesday wednesday thursday friday saturday]
-      specified_date  = date.empty? ? Date.today : Date.new(date)
+      specified_date  = date.empty? ? Date.today : Date.parse(date)
       log.info("specified date : #{specified_date} #{specified_date.wday} #{day_of_the_week[specified_date.wday]}")
 
       # 曜日テンプレートをload
@@ -67,6 +67,11 @@ module Hibinium
           log.info("勤務時間の終了時刻に#{checkout_time}を設定")
         end
 
+        # テンプレートが5行以上あったらレコード追加する
+        while template.length >= hibifo_page.report_edit_rows.size
+          hibifo_page.report_edit_rows.add_row
+        end
+        
         # テンプレートを入力
         template.each_with_index do |job, i|
           row          = hibifo_page.report_edit_rows[i]

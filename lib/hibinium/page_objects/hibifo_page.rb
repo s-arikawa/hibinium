@@ -58,6 +58,7 @@ module Hibinium
 
       # 一時保存する。
       def temporary_save
+        sleep 3
         temporary_save_btn
         sleep 5 #TODO:保存されるのを検知してスピードアップ
       end

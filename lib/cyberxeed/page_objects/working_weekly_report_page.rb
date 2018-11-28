@@ -19,7 +19,7 @@ module CyberXeed
       end
 
       # result_tableの内容をArray[hash]で返す。
-      def result_table_hash(headers = %w"日付 曜 ｶﾚﾝﾀﾞ 出勤時刻 退勤時刻 実労働時間")
+      def result_table_hash(headers = %w"日付 曜 ｶﾚﾝﾀﾞ 出勤時刻 退勤時刻 実労働時間 不就労有給")
         array = []
         result_table_element.each do |row|
           hash = {}

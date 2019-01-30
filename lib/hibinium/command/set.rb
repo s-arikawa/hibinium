@@ -22,7 +22,7 @@ module Hibinium
     include Hibinium::MyLogger
     desc 'set', 'hibifo set Template by day of the week and temporary save.'
 
-    def set(date = "")
+    def set(date = "", show = false)
       log.info("Hibifo set Template Start!! #{date}")
 
       # 設定する日の曜日を取得
@@ -35,7 +35,7 @@ module Hibinium
       log.info("template config file loaded!")
 
       # 日々報にログイン
-      browser = chrome_hibifo
+      browser = chrome_hibifo(!show) #show = true の場合は HeadLessではなくする
       begin
         hibifo_page = Hibinium::Scenario.login_with(browser)
 
@@ -84,6 +84,12 @@ module Hibinium
         # 一時保存
         hibifo_page.temporary_save
         log.info("hibifo #{specified_date} saved temporary")
+
+      rescue => e
+        browser.save_screenshot('screenshot.png')
+        log.error('日々報の更新に失敗しました。')
+        log.error(e.backtrace.join("\n"))
+        log.error(e.message)
       ensure
         browser.close
       end
@@ -95,7 +101,9 @@ module Hibinium
       browser = firefox_cyberxeed
       begin
         # 指定の日を検索する
-        start_date   = Date.new(specified_date.year, specified_date.month, 1).to_s.gsub('-', '')
+        search_start_day = (specified_date.day - 1) > 0 ? (specified_date.day - 1) : 1
+        s_date = Date.new(specified_date.year, specified_date.month, search_start_day)
+        start_date   = s_date.to_s.gsub('-', '')
         end_date     = specified_date.to_s.gsub('-', '')
         result_table = Hibinium::Scenario.get_work_record_table(start_date, end_date)
 

@@ -5,6 +5,7 @@ module Hibinium
     def chrome_hibifo(headless = true)
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_argument('--headless') if headless
+      options.add_argument("--window-size=1280,1000") # タスクをたくさん登録するとウィンドウから一時保存ボタンがはみ出す
       driver = Selenium::WebDriver.for :chrome, options: options # ブラウザ起動
       driver.get Hibifo_URL
       driver

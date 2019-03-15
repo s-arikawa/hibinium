@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'page-object', '2.2.4'
   spec.add_dependency 'thor', '0.20.0'
   spec.add_dependency 'highline', '2.0.0'
+  spec.add_dependency 'awesome_print', '1.8.0'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'

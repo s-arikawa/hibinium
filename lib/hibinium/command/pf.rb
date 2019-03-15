@@ -1,6 +1,5 @@
 require 'hibinium'
 require 'hibinium/command'
-require 'hibinium/my_logger'
 require 'hibinium/scenario'
 
 module Hibinium

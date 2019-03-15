@@ -1,6 +1,5 @@
 require 'hibinium'
 require 'hibinium/command'
-require 'hibinium/my_logger'
 require 'hibinium/scenario'
 
 module Hibinium
@@ -9,9 +8,9 @@ module Hibinium
 
     def diff(year = "", month = "")
       # 日々報の指定の月のデータを取得
-      specified_month = month.to_s.empty? ? Date.today : Date.new(year.to_i, month.to_i, -1)
-      start_date = Date.new(specified_month.year, specified_month.month, 1)
-      end_date   = specified_month
+      specified_month       = month.to_s.empty? ? Date.today : Date.new(year.to_i, month.to_i, -1)
+      start_date            = Date.new(specified_month.year, specified_month.month, 1)
+      end_date              = specified_month
       hibifo_monthly_report = get_hibifo_monthly_report(start_date, end_date)
 
       # Cyberxeedの指定の月のデータを取得
@@ -44,13 +43,13 @@ module Hibinium
             total_judge = false
           end
         end
-        log.info("#{date} | #{judge} | #{h_start} - #{h_end} | #{c_start} - #{c_end}")
+        puts "#{date} | #{judge} | #{h_start} - #{h_end} | #{c_start} - #{c_end}"
       end
 
       if total_judge
-        log.info("差異はありませんでした。")
+        puts "差異はありませんでした。"
       else
-        log.info("差異があります！")
+        puts "差異があります！"
       end
 
     end
@@ -64,10 +63,10 @@ module Hibinium
         hibifo_page = Hibinium::Scenario.login_with(browser)
 
         day_of_the_week = %w[日 月 火 水 木 金 土]
-        log.info("for #{start_date.to_s} ~ #{end_date.to_s}")
+        puts "for #{start_date.to_s} ~ #{end_date.to_s}"
         array = []
         (start_date..end_date).each do |day|
-          log.info("get hibi.i3-systems.com/report/#{day.strftime("%Y-%m-%d")}")
+          puts "get hibi.i3-systems.com/report/#{day.strftime("%Y-%m-%d")}"
           hibifo_page.page_to_specified_date(day.strftime("%Y-%m-%d"))
           hash         = {}
           hash['日付']   = day.strftime("%m/%d")

@@ -1,4 +1,4 @@
-require 'hibinium/my_logger'
+require 'utils/formatter'
 module Hibinium
   class Scenario
     include Hibinium::BrowserBase
@@ -7,24 +7,24 @@ module Hibinium
     def self.login_and_move_to_wwr (browser)
       user_config = HibifoConfig.new.load.cyberxeed
 
-      log.info("open firefox browser")
+      puts "open firefox browser"
       login_page = CyberXeed::PageObjects::LoginPage.new(browser)
-      log.info("got cyberxeed url")
+      puts "got cyberxeed url"
       top_page = login_page.login_with(user_config.company_code, user_config.user_name, user_config.password)
-      log.info("cyberxeed login success!")
+      puts "cyberxeed login success!"
       wwr_page = top_page.page_to_working_weekly_report
-      log.info("move to working_weekly_report page")
+      puts "move to working_weekly_report page"
       wwr_page
     end
 
     # 日々報にログインする
     def self.login_with(browser)
       user_config = HibifoConfig.new.load.hibifo
-      log.info("open chrome browser")
+      puts "open chrome browser"
       login_page = Hibinium::PageObjects::LoginPage.new(browser)
-      log.info("got hibifo url")
+      puts "got hibifo url"
       hibifo_page = login_page.login_with(user_config.user_name, user_config.password)
-      log.info("hibifo login success!")
+      puts Formatter.success "hibifo login success!", label: :SUCCESS
       hibifo_page
     end
 
@@ -41,7 +41,7 @@ module Hibinium
         end_date              = end_date.to_s.gsub('-', '')
         wwr_page.period_start = start_date
         wwr_page.period_end   = end_date
-        log.info("#{start_date} ~ #{end_date}の期間で検索")
+        puts "#{start_date} ~ #{end_date}の期間で検索"
         wwr_page.search
         sleep 5 # TODO 高速化
         wwr_page.result_table_hash
@@ -63,10 +63,5 @@ module Hibinium
       get_work_record_table(start_date, end_date)
     end
 
-    private
-
-    def self.log
-      MyLogger.logger
-    end
   end
 end

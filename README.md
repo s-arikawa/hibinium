@@ -6,6 +6,10 @@ TODO: Delete this and the text above, and describe your gem
 
 ## Installation
 
+
+* [How to Install for Hibinium (MacOS)](https://i3systems-toolbox.visualstudio.com/hibinium/_wiki/wikis/hibinium.wiki?wikiVersion=GBwikiMaster&pageId=17&pagePath=%2FHow%20to%20Install%20for%20Hibinium%20(MacOS\))
+
+
 Add this line to your application's Gemfile:
 
 ```ruby
@@ -26,9 +30,11 @@ Or install it yourself as:
 
     $ hibi
     Commands:
+      hibi diff            # compare your enter daily report and cx
       hibi hello           # say hello!
       hibi help [COMMAND]  # Describe available commands or one specific command
       hibi init            # hibinium configuration file make up!
+      hibi pf              # Premium Friday!!
       hibi set             # hibifo set Template by day of the week and temporary save.
 
 

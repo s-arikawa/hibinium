@@ -1,5 +1,4 @@
 require 'hibinium'
-require 'hibinium/my_logger'
 require 'hibinium/command'
 require 'hibinium/command/model/hibifo_template'
 require 'hibinium/command/model/hibifo_config'
@@ -20,11 +19,11 @@ module Hibinium
 
       if make_template
         File.write(TemplateFilePath, generate_template_yaml)
-        log.info("make file #{TemplateFilePath}")
+        puts "make file #{TemplateFilePath}"
       end
       if make_config
         File.write(ConfigFilePath, generate_config_yaml)
-        log.info("make file #{ConfigFilePath}")
+        puts "make file #{ConfigFilePath}"
       end
     end
 

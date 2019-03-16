@@ -21,6 +21,7 @@ module Hibinium
   class Command < Thor
     include Hibinium::BrowserBase
     desc 'set', 'hibifo set Template by day of the week and temporary save.'
+    method_option :show, aliases: 's', desc: 'Browser showing'
 
     def set(date = "", show = false)
       puts Formatter.headline("Hibifo set Template Start!! #{date}", color: :red)
@@ -35,7 +36,7 @@ module Hibinium
       puts Formatter.success("template config file loaded!", label: :SUCCESS)
 
       # 日々報にログイン
-      browser = chrome_hibifo(!show) #show = true の場合は HeadLessではなくする
+      browser = chrome_hibifo(show_flag) #show = true の場合は HeadLessではなくする
       begin
         hibifo_page = Hibinium::Scenario.login_with(browser)
 
@@ -45,11 +46,9 @@ module Hibinium
 
         # 入力済みでないか確認
         #   入力済みだったら終わる
-        hibifo_page.report_edit_rows.each do |row|
-          if row.entered?
-            puts Formatter.warning("hibifo #{specified_date} is entered!!! stop input", label: :WARN)
-            return
-          end
+        if hibifo_page.report_edit_rows.any?(&:entered?)
+          puts Formatter.warning("hibifo #{specified_date} is entered!!! stop input", label: :WARN)
+          return
         end
 
         # 出勤/退勤打刻時間をCyberxeedから取得
@@ -98,14 +97,14 @@ module Hibinium
     private
 
     def get_checkin_out_row(specified_date)
-      browser = firefox_cyberxeed
+      browser = firefox_cyberxeed(show_flag)
       begin
         # 指定の日を検索する
         search_start_day = (specified_date.day - 1) > 0 ? (specified_date.day - 1) : 1
         s_date           = Date.new(specified_date.year, specified_date.month, search_start_day)
         start_date       = s_date.to_s.gsub('-', '')
         end_date         = specified_date.to_s.gsub('-', '')
-        result_table     = Hibinium::Scenario.get_work_record_table(start_date, end_date)
+        result_table     = Hibinium::Scenario.get_work_record_table(browser, start_date, end_date)
 
         date       = specified_date.strftime("%m/%d")
         target_row = result_table.find do |row|
@@ -115,6 +114,15 @@ module Hibinium
         return target_row
       ensure
         browser.close
+      end
+    end
+
+    def show_flag
+      show = options[:show]
+      if show
+        false # headless off
+      else
+        true # headless on
       end
     end
 

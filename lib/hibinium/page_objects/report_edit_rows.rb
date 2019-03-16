@@ -5,6 +5,7 @@ module Hibinium
 
     # 日々報入力ページの詳細入力欄のリストを表すクラス
     class ReportEditRows
+      include Enumerable
 
       def initialize(browser)
         @browser = browser

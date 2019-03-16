@@ -12,6 +12,7 @@ require 'awesome_print'
 module Hibinium
   class Command < Thor
     desc 'rm', 'hibifo remove day'
+    method_option :show, aliases: 's', desc: 'Browser showing'
 
     def rm(date = "")
 
@@ -21,7 +22,7 @@ module Hibinium
       puts Formatter.option "specified date : #{specified_date}"
 
       # 日々報にログイン
-      browser = chrome_hibifo(false) #show = true の場合は HeadLessではなくする
+      browser = chrome_hibifo(show_flag) #show = true の場合は HeadLessではなくする
       begin
         hibifo_page = Hibinium::Scenario.login_with(browser)
 
@@ -31,11 +32,9 @@ module Hibinium
 
         # 入力済み確認
         #   未入力だったら終わる
-        hibifo_page.report_edit_rows.each do |row|
-          unless row.entered?
-            puts Formatter.warning("hibifo #{specified_date} is NOT entered!!! stop remove", label: :WARN)
-            return
-          end
+        unless hibifo_page.report_edit_rows.any?(&:entered?)
+          puts Formatter.warning("hibifo #{specified_date} is NOT entered!!! stop remove", label: :WARN)
+          return
         end
 
         # 削除する
@@ -43,6 +42,17 @@ module Hibinium
 
         puts Formatter.success("hibifo #{specified_date} Removed.", label: :SUCCESS)
 
+      end
+    end
+
+    private
+
+    def show_flag
+      show = options[:show]
+      if show
+        false # headless off
+      else
+        true # headless on
       end
     end
   end

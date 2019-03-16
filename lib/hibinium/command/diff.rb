@@ -5,6 +5,7 @@ require 'hibinium/scenario'
 module Hibinium
   class Command < Thor
     desc 'diff', 'compare your enter daily report and cx'
+    method_option :show, aliases: 's', desc: 'Browser showing'
 
     def diff(year = "", month = "")
       # 日々報の指定の月のデータを取得
@@ -13,37 +14,43 @@ module Hibinium
       end_date              = specified_month
       hibifo_monthly_report = get_hibifo_monthly_report(start_date, end_date)
 
-      # Cyberxeedの指定の月のデータを取得
-      cyberxeed_monthly_report = Hibinium::Scenario.get_monthly_work_record_table(year, month)
 
-      # 比較
-      total_judge = true
-      (start_date..end_date).each do |day|
-        date             = day.strftime("%m/%d")
-        hibifo_report    = hibifo_monthly_report.find do |row|
-          row['日付'] == date
-        end
-        cyberxeed_report = cyberxeed_monthly_report.find do |row|
-          row['日付'] == date
-        end
+      browser = firefox_cyberxeed(show_flag)
+      begin
+        # Cyberxeedの指定の月のデータを取得
+        cyberxeed_monthly_report = Hibinium::Scenario.get_monthly_work_record_table(browser, year, month)
 
-        h_start  = hibifo_report['出勤時刻']
-        h_end    = hibifo_report['退勤時刻']
-        c_start  = cyberxeed_report['出勤時刻'].gsub(' ', '0')
-        c_end    = cyberxeed_report['退勤時刻'].gsub(' ', '0')
-        off_days = %w[法外 法定]
-        if h_start == c_start && h_end == c_end
-          judge = "OK"
-        else
-          calend = cyberxeed_report['ｶﾚﾝﾀﾞ']
-          if off_days.include?(calend) && c_start == '00000' && c_end == '00000'
-            judge = "休"
-          else
-            judge       = "NG"
-            total_judge = false
+        # 比較
+        total_judge = true
+        (start_date..end_date).each do |day|
+          date             = day.strftime("%m/%d")
+          hibifo_report    = hibifo_monthly_report.find do |row|
+            row['日付'] == date
           end
+          cyberxeed_report = cyberxeed_monthly_report.find do |row|
+            row['日付'] == date
+          end
+
+          h_start  = hibifo_report['出勤時刻']
+          h_end    = hibifo_report['退勤時刻']
+          c_start  = cyberxeed_report['出勤時刻'].gsub(' ', '0')
+          c_end    = cyberxeed_report['退勤時刻'].gsub(' ', '0')
+          off_days = %w[法外 法定]
+          if h_start == c_start && h_end == c_end
+            judge = "OK"
+          else
+            calend = cyberxeed_report['ｶﾚﾝﾀﾞ']
+            if off_days.include?(calend) && c_start == '00000' && c_end == '00000'
+              judge = "休"
+            else
+              judge       = "NG"
+              total_judge = false
+            end
+          end
+          puts "#{date} | #{judge} | #{h_start} - #{h_end} | #{c_start} - #{c_end}"
         end
-        puts "#{date} | #{judge} | #{h_start} - #{h_end} | #{c_start} - #{c_end}"
+      ensure
+        browser.close if browser
       end
 
       if total_judge
@@ -58,7 +65,7 @@ module Hibinium
 
     def get_hibifo_monthly_report(start_date, end_date)
       # 日々報にログイン
-      browser = chrome_hibifo
+      browser = chrome_hibifo(show_flag)
       begin
         hibifo_page = Hibinium::Scenario.login_with(browser)
 
@@ -78,6 +85,15 @@ module Hibinium
         array
       rescue
         browser.close
+      end
+    end
+
+    def show_flag
+      show = options[:show]
+      if show
+        false # headless off
+      else
+        true # headless on
       end
     end
 

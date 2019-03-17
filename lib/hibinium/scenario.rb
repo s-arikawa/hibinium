@@ -1,4 +1,7 @@
 require 'utils/formatter'
+require 'cyberxeed/page_objects/login_page'
+require 'cyberxeed/page_objects/top_page'
+
 module Hibinium
   class Scenario
     include Hibinium::BrowserBase

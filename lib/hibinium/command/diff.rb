@@ -88,14 +88,5 @@ module Hibinium
       end
     end
 
-    def show_flag
-      show = options[:show]
-      if show
-        false # headless off
-      else
-        true # headless on
-      end
-    end
-
   end
 end

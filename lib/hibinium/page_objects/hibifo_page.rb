@@ -51,7 +51,12 @@ module Hibinium
       #   yyyy-mm-dd
       # @return HibifoPage.new
       def page_to_specified_date(date)
-        @browser.get "#{Hibifo_URL}report/#{date}"
+        specified_date = date
+        if date.is_a?(Date)
+          specified_date = specified_date.strftime("%Y-%m-%d")
+        end
+
+        @browser.get "#{Hibifo_URL}report/#{specified_date}"
         sleep 2 # ページがjavascriptで初期化されるのを待つ
         HibifoPage.new(@browser)
       end

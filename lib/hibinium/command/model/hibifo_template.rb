@@ -65,13 +65,17 @@ module Hibinium
     # ローカル設定ファイルを読み込む
     def load
       yaml           = YAML.load_file(TemplateFilePath)
-      self.sunday    = yaml["sunday"].each { |r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"]) } unless yaml["sunday"].nil?
-      self.monday    = yaml["monday"].each { |r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"]) } unless yaml["monday"].nil?
-      self.tuesday   = yaml["tuesday"].each { |r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"]) } unless yaml["tuesday"].nil?
-      self.wednesday = yaml["wednesday"].each { |r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"]) } unless yaml["wednesday"].nil?
-      self.thursday  = yaml["thursday"].each { |r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"]) } unless yaml["thursday"].nil?
-      self.friday    = yaml["friday"].each { |r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"]) } unless yaml["friday"].nil?
-      self.saturday  = yaml["saturday"].each { |r| ReportDetailRow.new(code: r["code"], text: r["text"], time: r["time"]) } unless yaml["saturday"].nil?
+      yaml.default   = []
+      initialize_row = -> (r) { ReportDetailRow.new(r["code"], r["text"], r["time"]) }
+
+      self.sunday    = yaml["sunday"].to_a.map(&initialize_row)
+      self.monday    = yaml["monday"].to_a.map(&initialize_row)
+      self.tuesday   = yaml["tuesday"].to_a.map(&initialize_row)
+      self.wednesday = yaml["wednesday"].to_a.map(&initialize_row)
+      self.thursday  = yaml["thursday"].to_a.map(&initialize_row)
+      self.friday    = yaml["friday"].to_a.map(&initialize_row)
+      self.saturday  = yaml["saturday"].to_a.map(&initialize_row)
+
       self
     end
   end
@@ -80,7 +84,7 @@ module Hibinium
   class ReportDetailRow
     attr_accessor :code, :text, :time
 
-    def initialize(code: "", text: "", time: "00:00")
+    def initialize(code = "", text = "", time = "00:00")
       self.code = code
       self.text = text
       self.time = time

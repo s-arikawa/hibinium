@@ -18,7 +18,7 @@ module Hibinium
     desc 'set', 'hibifo set Template by day of the week and temporary save.'
     method_option :show, aliases: 's', desc: 'Browser showing'
 
-    def set(date = "", show = false)
+    def set(date = "")
       begin
         puts Formatter.headline("Hibifo set Template Start!! #{date}", color: :red)
 
@@ -40,7 +40,7 @@ module Hibinium
 
           # 入力済みでないか確認
           #   入力済みだったら終わる
-          if hibifo_page.report_edit_rows.any?(&:entered?)
+          if hibifo_page.entered?
             puts Formatter.warning("hibifo #{specified_date} is entered!!! stop input", label: :WARN)
             return
           end

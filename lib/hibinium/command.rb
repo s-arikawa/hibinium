@@ -6,6 +6,7 @@ require 'hibinium/command/set'
 require 'hibinium/command/diff'
 require 'hibinium/command/pf'
 require 'hibinium/command/rm'
+require 'hibinium/command/cp'
 
 module Hibinium
   class Command < Thor

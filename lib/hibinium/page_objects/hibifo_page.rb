@@ -1,5 +1,6 @@
 require 'page-object'
 require 'hibinium/page_objects/report_edit_rows'
+require 'utils/formatter'
 
 module Hibinium
   module PageObjects
@@ -56,7 +57,9 @@ module Hibinium
           specified_date = specified_date.strftime("%Y-%m-%d")
         end
 
-        @browser.get "#{Hibifo_URL}report/#{specified_date}"
+        url = "#{Hibifo_URL}report/#{specified_date}"
+        puts Formatter.label('GET', Formatter.url(url), :blue)
+        @browser.get url
         sleep 2 # ページがjavascriptで初期化されるのを待つ
         HibifoPage.new(@browser)
       end
@@ -80,6 +83,11 @@ module Hibinium
       # ReportEditRowsはEnumerable*っぽい*クラス。
       def report_edit_rows
         ReportEditRows.new(@browser)
+      end
+
+      # 入力済みの行があるか？
+      def entered?
+        self.report_edit_rows.any?(&:entered?)
       end
 
     end

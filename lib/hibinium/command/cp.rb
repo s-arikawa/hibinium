@@ -17,7 +17,7 @@ module Hibinium
     include Hibinium::BrowserBase
     desc 'cp', 'hibifo copy.'
     method_option :show, aliases: 's', desc: 'Browser showing'
-    method_option :date, aliases: 'd', desc: '指定した日付のタスクをコピー'
+    method_option :date, aliases: 'd', type: :string, defalut: nil, desc: '指定した日付のタスクをコピー'
     method_option :week_of_the_day, aliases: 'w', desc: '入力済みの直近の同じ曜日からタスクをコピー'
 
     # 入力済みのタスクをコピーして指定した日付に保存するコマンド。
@@ -58,10 +58,16 @@ module Hibinium
           end
 
           # コピー元を探してタスクを取得する
+          copy_source_date = option_date || specified_date
+
           puts Formatter.arrow("Find task to copy", color: :green)
-          copy_source_rows = copy_yesterday(specified_date, hibifo_page)
+          copy_source_rows = copy_yesterday(copy_source_date, hibifo_page, option_week)
           copy_source_rows.each_with_index do |copied_row, i|
             puts Formatter.label("copied row[#{i}]", "#{copied_row[:code]} | #{copied_row[:text]} | #{copied_row[:time]}", :yellow)
+          end
+          if copy_source_rows.empty?
+            puts Formatter.warning("コピー元を探しましたが、入力済みのタスクがありませんでした。", label: :WARN)
+            return
           end
 
           # コピー先のページに移動する
@@ -107,10 +113,15 @@ module Hibinium
     # 前日に登録がない場合は、その前の日にさかのぼって見つかるまで探す。
     # @param [Date] specified_date 指定した日付
     # @param [HibifoPage] hibifo_page 日々報PageObject
+    # @param [Boolean] week_on 曜日指定オプション ON/OFF
     # @return [Array] 前日のタスク
-    def copy_yesterday(specified_date, hibifo_page)
+    def copy_yesterday(specified_date, hibifo_page, week_on)
       rows = []
-      specified_date.prev_day(1).step(365, -1) do |yesterday|
+      specified_date.prev_day.step(specified_date - 100, -1) do |yesterday|
+        if week_on
+          # 曜日が同じ日だけ処理対象にする
+          next unless compare_week(specified_date, yesterday)
+        end
         yesterday_page = hibifo_page.page_to_specified_date(yesterday)
         next unless yesterday_page.entered? # 未入力の日はSKIP
         yesterday_page.report_edit_rows.map do |row|
@@ -124,6 +135,29 @@ module Hibinium
         break
       end
       rows
+    end
+
+    def compare_week(specified_date, yesterday)
+      if specified_date.wday == yesterday.wday
+        week = %w[sunday monday tuesday wednesday thursday friday saturday]
+        puts Formatter.label(nil, "#{yesterday} #{week[yesterday.wday]}", :blue)
+        true
+      else
+        false
+      end
+    end
+
+    # オプション コピー元日付を取得する。
+    def option_date
+      date = options[:date]
+      # 処理の事情によりオプションで指定した日の次の日付を返す.
+      date.nil? ? nil : date_parse(date).next_day
+    end
+
+    # オプション 曜日コピー が ON or OFF
+    def option_week
+      week = options[:week_of_the_day]
+      !week.nil?
     end
 
   end

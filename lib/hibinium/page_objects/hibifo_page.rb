@@ -70,6 +70,7 @@ module Hibinium
         temporary_save_btn
         sleep 5 #TODO:保存されるのを検知してスピードアップ
       end
+
       # 削除する
       def delete
         delete_link

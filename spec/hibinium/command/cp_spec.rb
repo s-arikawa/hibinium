@@ -8,4 +8,10 @@ RSpec.describe Hibinium::Command do
     cmd = Hibinium::Command.new
     cmd.cp
   end
+
+  it 'cp -w' do
+    cmd         = Hibinium::Command.new
+    cmd.options = { week_of_the_day: true }
+    cmd.cp
+  end
 end

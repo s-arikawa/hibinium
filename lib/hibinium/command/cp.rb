@@ -60,8 +60,12 @@ module Hibinium
           # コピー元を探してタスクを取得する
           puts Formatter.arrow("Find task to copy", color: :green)
           copy_source_rows = copy_yesterday(specified_date, hibifo_page)
+          copy_source_rows.each_with_index do |copied_row, i|
+            puts Formatter.label("copied row[#{i}]", "#{copied_row[:code]} | #{copied_row[:text]} | #{copied_row[:time]}", :yellow)
+          end
 
           # コピー先のページに移動する
+          puts Formatter.arrow("move to pasting date page", color: :green)
           hibifo_page.page_to_specified_date(specified_date)
 
           # タスクが5行以上あったらレコード追加する
@@ -110,12 +114,14 @@ module Hibinium
         yesterday_page = hibifo_page.page_to_specified_date(yesterday)
         next unless yesterday_page.entered? # 未入力の日はSKIP
         yesterday_page.report_edit_rows.map do |row|
+          next unless row.entered? # 未入力行はSKIP
           hash        = {}
           hash[:code] = row.job_code
           hash[:text] = row.job_text
           hash[:time] = row.job_time
           rows << hash
         end
+        break
       end
       rows
     end

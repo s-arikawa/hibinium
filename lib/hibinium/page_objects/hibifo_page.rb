@@ -60,7 +60,7 @@ module Hibinium
         url = "#{Hibifo_URL}report/#{specified_date}"
         puts Formatter.label('GET', Formatter.url(url), :blue)
         @browser.get url
-        sleep 2 # ページがjavascriptで初期化されるのを待つ
+        sleep 5 # ページがjavascriptで初期化されるのを待つ
         HibifoPage.new(@browser)
       end
 

@@ -47,6 +47,10 @@ module Hibinium
         not (self.job_code.empty? || self.job_text.empty? || self.job_time.empty?)
       end
 
+      def to_s
+        "#{self.job_code} | #{self.job_text} | #{self.job_time}"
+      end
+
     end
   end
 end

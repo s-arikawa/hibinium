@@ -10,7 +10,7 @@ module CyberXeed
       text_field(:company_code, name: 'DataSource')
       text_field(:employee_code, name: 'LoginID')
       text_field(:password, name: 'PassWord')
-      image(:login, name: 'LOGINBUTTON')
+      span(:login, class: 'robot', text: "Login")
 
       def login
         login_element.click
